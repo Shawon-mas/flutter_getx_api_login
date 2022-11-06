@@ -4,86 +4,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../HomePage/homepage.dart';
+import '../controller/login_controller.dart';
+import '../utilitis/utilites.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
+  final _controller = Get.put(LoginController());
+  LoginScreen({Key? key}) : super(key: key);
 
-
-  const LoginScreen({Key? key}) : super(key: key);
-
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  bool _isLoading=false;
-  bool _isObscure = true;
-  bool _validate = false;
-  TextEditingController number=TextEditingController();
-  TextEditingController password=TextEditingController();
-
-  void login(var num,var pass) async{
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
-    String url='https://admin.cyberteens.app/api/CC/User/Login';
-    Map body={
-      'number' : num,
-      'password': pass
-    };
-
-    try{
-      Response response=await post(
-        Uri.parse(url), body: body
-      );
-      if(response.statusCode == 200)
-        {
-          print("Respnse:${response.body}");
-          var data=jsonDecode(response.body.toString());
-          var result=data['data'];
-          if(result!=null)
-          {
-            setState(() {
-              _isLoading=false;
-            });
-            //access_token
-            print("Access token: ${data['access_token']}");
-            Fluttertoast.showToast(
-                msg: "Login Success",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-
-
-
-       Navigator.push(context, MaterialPageRoute(builder: (context) => Hompage(
-           number:number.text,
-           password: password.text,
-
-       ),),);
-
-          }else{
-            Fluttertoast.showToast(
-                msg: "Login Error",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-          }
-
-        }
-    }catch(e){
-      print(e.toString());
-    }
-
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,12 +81,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     minWidth: double.infinity,
                     height: 50,
                     onPressed: () {
-                      setState(() {
-                        number.text.isEmpty ? _validate = true : _validate = false;
-                        password.text.isEmpty ? _validate = true : _validate = false;
-                      });
-                      login(number.text,password.text);
-
+                                  if(_controller.phoneController.text.isEmpty){
+                                    errorSnackBar(context, "Input fields can not be empty");
+                                  }if(_controller.passController.text.isEmpty){
+                                    errorSnackBar(context, "Input fields can not be empty");
+                                  }else{
+                                    _controller.loginWithDetails(_controller.phoneController.text, _controller.passController.text);
+                                  }
                     },
                     color: Colors.yellow,
                     elevation: 0,
@@ -183,12 +116,11 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(height: 5,),
         TextFormField(
           keyboardType: TextInputType.number,
-          controller: number,
+          controller: _controller.phoneController,
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.call),
                labelText: "Enter Number",
                hintText: "Enter your Number",
-              errorText: _validate ? 'Number Can\'t Be Empty' : null,
               contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -202,21 +134,22 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         SizedBox(height: 20,),
         TextFormField(
-          controller: password,
-          obscureText:_isObscure,
+          controller: _controller.passController,
+          obscureText:_controller.isObscure.value,
           decoration: InputDecoration(
-              prefixIcon: Icon(Icons.lock),
-              suffixIcon: IconButton(onPressed: ()
-              {
-                setState(() {
-                  _isObscure = !_isObscure;
-                });
+              prefixIcon: const Icon(Icons.lock),
+              suffixIcon: Obx((){
+                return IconButton(onPressed: ()
+                {
+                  _controller.isObscure.value=!_controller.isObscure.value;
 
-              }, icon: Icon(_isObscure?Icons.visibility : Icons.visibility_off,)),
+                }, icon: Icon( _controller.isObscure.value?Icons.visibility : Icons.visibility_off,)
+                );
+              }),
               hoverColor: Colors.red,
               labelText: "Enter Password",
               hintText: "Enter your Password",
-              errorText: _validate ? 'Password Can\'t Be Empty' : null,
+
 
               contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),
               enabledBorder: UnderlineInputBorder(
@@ -260,7 +193,66 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 /*
+void login(var num,var pass) async{
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    String url='https://admin.cyberteens.app/api/CC/User/Login';
+    Map body={
+      'number' : num,
+      'password': pass
+    };
 
+    try{
+      Response response=await post(
+        Uri.parse(url), body: body
+      );
+      if(response.statusCode == 200)
+        {
+          print("Respnse:${response.body}");
+          var data=jsonDecode(response.body.toString());
+          var result=data['data'];
+          if(result!=null)
+          {
+            setState(() {
+              _isLoading=false;
+            });
+            //access_token
+            print("Access token: ${data['access_token']}");
+            Fluttertoast.showToast(
+                msg: "Login Success",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0
+            );
+
+
+
+       Navigator.push(context, MaterialPageRoute(builder: (context) => Hompage(
+           number:number.text,
+           password: password.text,
+
+       ),),);
+
+          }else{
+            Fluttertoast.showToast(
+                msg: "Login Error",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0
+            );
+          }
+
+        }
+    }catch(e){
+      print(e.toString());
+    }
+
+  }
  */
 
 //LoginScreen
