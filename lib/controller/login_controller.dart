@@ -20,9 +20,14 @@ class LoginController extends GetxController{
                try{
                  var response=await http.post(Uri.parse(ApiServices.login_api_url),body: body);
                  if(response.statusCode==200){
-                   print("Respnse:${response.body}");
+                   if (kDebugMode) {
+                     print("Response:${response.body}");
+                   }
                    var data=jsonDecode(response.body.toString());
                    var result=data['data'];
+                   if(result!=null){
+                     isLoading.value=true;
+                   }
 
                  }
                }catch(e){
@@ -30,6 +35,13 @@ class LoginController extends GetxController{
                    print(e.toString());
                  }
                }
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    phoneController.dispose();
+    passController.dispose();
   }
 
 }

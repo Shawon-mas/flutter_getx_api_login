@@ -70,35 +70,37 @@ class LoginScreen extends StatelessWidget {
                   padding: EdgeInsets.only(top: 3, left: 3),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
-                      border: Border(
+                      border: const Border(
                         bottom: BorderSide(color: Colors.black),
                         top: BorderSide(color: Colors.black),
                         left: BorderSide(color: Colors.black),
                         right: BorderSide(color: Colors.black),
                       )
                   ),
-                  child: MaterialButton(
-                    minWidth: double.infinity,
-                    height: 50,
-                    onPressed: () {
-                                  if(_controller.phoneController.text.isEmpty){
-                                    errorSnackBar(context, "Input fields can not be empty");
-                                  }if(_controller.passController.text.isEmpty){
-                                    errorSnackBar(context, "Input fields can not be empty");
-                                  }else{
-                                    _controller.loginWithDetails(_controller.phoneController.text, _controller.passController.text);
-                                  }
-                    },
-                    color: Colors.yellow,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)
-                    ),
-                    child: Text("Sign In", style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18
-                    ),),
-                  ),
+                  child: Obx((){
+                   return MaterialButton(
+                      minWidth: double.infinity,
+                      height: 50,
+                      onPressed: () {
+                        if(_controller.phoneController.text.isEmpty){
+                          errorSnackBar(context, "phone fields can not be empty");
+                          return;
+                        }if(_controller.passController.text.isEmpty){
+                          errorSnackBar(context, "pass fields can not be empty");
+                          return;
+                        }else{
+                          _controller.loginWithDetails(_controller.phoneController.text, _controller.passController.text);
+                        }
+                      },
+                      color: Colors.yellow,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)
+                      ),
+                      child: _controller.isLoading.value? Center(child: CircularProgressIndicator(),)
+                          : Text("Log in"),
+                    );
+                  })
                 ),
               ),
 
@@ -118,17 +120,17 @@ class LoginScreen extends StatelessWidget {
           keyboardType: TextInputType.number,
           controller: _controller.phoneController,
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.call),
+            prefixIcon: const Icon(Icons.call),
                labelText: "Enter Number",
                hintText: "Enter your Number",
-              contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),
+              contentPadding: const EdgeInsets.symmetric(vertical: 0,horizontal: 10),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(color: Colors.grey)
+                  borderSide: const BorderSide(color: Colors.grey)
               ),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(color: Colors.grey)
+                  borderSide: const BorderSide(color: Colors.grey)
               )
           ),
         ),
