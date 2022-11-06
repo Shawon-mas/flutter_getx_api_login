@@ -13,6 +13,7 @@ class LoginController extends GetxController{
   var isObscure = true.obs;
 
   loginWithDetails(String number,String pass) async {
+        isLoading.value=true;
                Map<String,dynamic> body={
                  ApiServices.PHONE_NUMBER:number,
                  ApiServices.PASSWORD:pass,
@@ -26,13 +27,17 @@ class LoginController extends GetxController{
                    var data=jsonDecode(response.body.toString());
                    var result=data['data'];
                    if(result!=null){
-                     isLoading.value=true;
+                     isLoading.value=false;
+                   }else{
+                     isLoading.value=false;
                    }
 
                  }
                }catch(e){
+                 isLoading.value=false;
                  if (kDebugMode) {
                    print(e.toString());
+
                  }
                }
   }
