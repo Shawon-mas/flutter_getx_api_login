@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../HomePage/homepage.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,26 +18,36 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool _isLoading=false;
   bool _isObscure = true;
   bool _validate = false;
   TextEditingController number=TextEditingController();
   TextEditingController password=TextEditingController();
 
   void login(var num,var pass) async{
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    String url='https://admin.cyberteens.app/api/CC/User/Login';
+    Map body={
+      'number' : num,
+      'password': pass
+    };
+
     try{
       Response response=await post(
-        Uri.parse('https://admin.cyberteens.app/api/CC/User/Login'),
-        body: {
-          'number' : num,
-          'password': pass
-        }
+        Uri.parse(url), body: body
       );
       if(response.statusCode == 200)
         {
+          print("Respnse:${response.body}");
           var data=jsonDecode(response.body.toString());
           var result=data['data'];
           if(result!=null)
           {
+            setState(() {
+              _isLoading=false;
+            });
+            //access_token
+            print("Access token: ${data['access_token']}");
             Fluttertoast.showToast(
                 msg: "Login Success",
                 toastLength: Toast.LENGTH_SHORT,
@@ -46,6 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 textColor: Colors.white,
                 fontSize: 16.0
             );
+
+
 
        Navigator.push(context, MaterialPageRoute(builder: (context) => Hompage(
            number:number.text,
