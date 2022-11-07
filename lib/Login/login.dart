@@ -21,51 +21,65 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child:Container(
+        child: Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height,
           margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
           child: Column(
-            children:<Widget> [
+            children: <Widget>[
               Container(
                 height: MediaQuery.of(context).size.height / 5,
                 decoration: BoxDecoration(),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: SvgPicture.asset("images/login.svg",
+                  child: SvgPicture.asset(
+                    "images/login.svg",
                   ),
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children:<Widget> [
-                  Text('Sign In',textAlign: TextAlign.center,style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30.0
-                  ),),
-                  SizedBox(height: 10,),
-                  Text('Please login your account',style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.grey[700],
-                  ),),
+                children: <Widget>[
+                  Text(
+                    'Sign In',
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Please login your account',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.grey[700],
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(height: 40,),
+              SizedBox(
+                height: 40,
+              ),
               Padding(
-                padding:EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
-
-                  children:<Widget> [
+                  children: <Widget>[
                     makeInput(),
-                    SizedBox(height: 10,),
-
+                    SizedBox(
+                      height: 10,
+                    ),
                   ],
                 ),
               ),
-
-              SizedBox(height: 20,),
-              Padding(padding:EdgeInsets.symmetric(horizontal: 20),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Container(
                   padding: EdgeInsets.only(top: 3, left: 3),
                   decoration: BoxDecoration(
@@ -75,116 +89,115 @@ class LoginScreen extends StatelessWidget {
                         top: BorderSide(color: Colors.black),
                         left: BorderSide(color: Colors.black),
                         right: BorderSide(color: Colors.black),
-                      )
-                  ),
-                  child: Obx((){
-                   return MaterialButton(
-                      minWidth: double.infinity,
-                      height: 50,
-                      onPressed: () {
-                        if(_controller.phoneController.text.isEmpty){
-                          errorSnackBar(context, "phone fields can not be empty");
-                          return;
-                        }if(_controller.passController.text.isEmpty){
-                          errorSnackBar(context, "pass fields can not be empty");
-                          return;
-                        }else{
-                          _controller.loginWithDetails(_controller.phoneController.text, _controller.passController.text);
-                        }
-                      },
-                      color: Colors.yellow,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50)
-                      ),
-                      child: _controller.isLoading.value? Center(child: CircularProgressIndicator(),)
+                      )),
+                  child: MaterialButton(
+                    minWidth: double.infinity,
+                    height: 50,
+                    onPressed: () {
+                      if (_controller.phoneController.text.isEmpty) {
+                        errorSnackBar(context, "phone fields can not be empty");
+                        return;
+                      }
+                      if (_controller.passController.text.isEmpty) {
+                        errorSnackBar(context, "pass fields can not be empty");
+                        return;
+                      } else {
+                        _controller.loginWithDetails(
+                            _controller.phoneController.text,
+                            _controller.passController.text);
+                      }
+                    },
+                    color: Colors.yellow,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    child: Obx(
+                      () => _controller.isLoading.value
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
                           : Text("Log in"),
-                    );
-                  })
+                    ),
+                  ),
                 ),
               ),
-
             ],
           ),
         ),
       ),
     );
   }
-  Widget makeInput(){
-    return Column(
 
+  Widget makeInput() {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget> [
-        SizedBox(height: 5,),
+      children: [
+        SizedBox(
+          height: 5,
+        ),
         TextFormField(
           keyboardType: TextInputType.number,
           controller: _controller.phoneController,
           decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.call),
-               labelText: "Enter Number",
-               hintText: "Enter your Number",
-              contentPadding: const EdgeInsets.symmetric(vertical: 0,horizontal: 10),
+              prefixIcon: const Icon(Icons.call),
+              labelText: "Enter Number",
+              hintText: "Enter your Number",
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.grey)
-              ),
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(color: Colors.grey)),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.grey)
-              )
-          ),
+                  borderSide: const BorderSide(color: Colors.grey))),
         ),
-        SizedBox(height: 20,),
-        TextFormField(
-          controller: _controller.passController,
-          obscureText:_controller.isObscure.value,
-          decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.lock),
-              suffixIcon: Obx((){
-                return IconButton(onPressed: ()
-                {
-                  _controller.isObscure.value=!_controller.isObscure.value;
-
-                }, icon: Icon( _controller.isObscure.value?Icons.visibility : Icons.visibility_off,)
-                );
-              }),
-              hoverColor: Colors.red,
-              labelText: "Enter Password",
-              hintText: "Enter your Password",
-
-
-              contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),
-              enabledBorder: UnderlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(color: Colors.grey)
-              ),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(color: Colors.grey)
-              )
-          ),
+        SizedBox(
+          height: 20,
         ),
-        SizedBox(height: 10,),
+        Obx(() => TextFormField(
+              controller: _controller.passController,
+              obscureText: _controller.isObscure.value,
+              decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      _controller.isObscure.value =
+                          !_controller.isObscure.value;
+                    },
+                    icon: Icon(
+                      _controller.isObscure.value == true
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                  ),
+                  hoverColor: Colors.red,
+                  labelText: "Enter Password",
+                  hintText: "Enter your Password",
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                  enabledBorder: UnderlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(color: Colors.grey)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(color: Colors.grey))),
+            )),
+        SizedBox(
+          height: 10,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Padding(
-
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 "Forgot Password?",
                 style: TextStyle(
-                  shadows: [
-                    Shadow(
-                        color: Colors.black,
-                        offset: Offset(0, -5))
-                  ],
+                  shadows: [Shadow(color: Colors.black, offset: Offset(0, -5))],
                   color: Colors.transparent,
-                  decoration:
-                  TextDecoration.underline,
+                  decoration: TextDecoration.underline,
                   decorationColor: Colors.black,
                   decorationThickness: 2,
-
                 ),
               ),
             )
