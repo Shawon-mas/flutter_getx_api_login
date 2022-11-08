@@ -29,22 +29,22 @@ class LoginScreen extends StatelessWidget {
             children:<Widget> [
               Container(
                 height: MediaQuery.of(context).size.height / 5,
-                decoration: const BoxDecoration(),
+                decoration: BoxDecoration(),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: SvgPicture.asset("images/login.svg",
                   ),
                 ),
               ),
-              const SizedBox(height: 10,),
+              SizedBox(height: 10,),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children:<Widget> [
-                  const Text('Sign In',textAlign: TextAlign.center,style: TextStyle(
+                  Text('Sign In',textAlign: TextAlign.center,style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 30.0
                   ),),
-                  const SizedBox(height: 10,),
+                  SizedBox(height: 10,),
                   Text('Please login your account',style: TextStyle(
                     fontSize: 20.0,
                     color: Colors.grey[700],
@@ -97,8 +97,8 @@ class LoginScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)
                       ),
-                      child: _controller.isLoading.value? const Center(child: CircularProgressIndicator(),)
-                          : const Text("Log in"),
+                      child: _controller.isLoading.value? Center(child: CircularProgressIndicator(),)
+                          : Text("Log in"),
                     );
                   })
                 ),
@@ -115,7 +115,7 @@ class LoginScreen extends StatelessWidget {
 
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget> [
-        const SizedBox(height: 5,),
+        SizedBox(height: 5,),
         TextFormField(
           keyboardType: TextInputType.number,
           controller: _controller.phoneController,
@@ -134,7 +134,7 @@ class LoginScreen extends StatelessWidget {
               )
           ),
         ),
-        const SizedBox(height: 20,),
+        SizedBox(height: 20,),
         TextFormField(
           controller: _controller.passController,
           obscureText:_controller.isObscure.value,
@@ -153,24 +153,24 @@ class LoginScreen extends StatelessWidget {
               hintText: "Enter your Password",
 
 
-              contentPadding: const EdgeInsets.symmetric(vertical: 0,horizontal: 10),
+              contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),
               enabledBorder: UnderlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.grey)
+                  borderSide: BorderSide(color: Colors.grey)
               ),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.grey)
+                  borderSide: BorderSide(color: Colors.grey)
               )
           ),
         ),
-        const SizedBox(height: 10,),
+        SizedBox(height: 10,),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: const [
+          children: [
             Padding(
 
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Text(
                 "Forgot Password?",
                 style: TextStyle(
