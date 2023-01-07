@@ -40,18 +40,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
      SharedPrefs prefs=SharedPrefs();
      bool isLogin=await prefs.getIsLogin()??false;
 
-    /*isLogin.then((value) {
-      return Timer(Duration(seconds: 3),(){
-        Get.to(Hompage());
-      });
-
-
-    }).catchError((e){
-      return Timer(Duration(seconds: 3),(){
-        Get.to(LoginScreen());
-      });
-
-    });*/
     if( isLogin){
       Timer(Duration(seconds: 3),(){
         Get.off(Hompage());

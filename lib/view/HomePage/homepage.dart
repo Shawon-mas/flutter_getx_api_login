@@ -1,8 +1,10 @@
 import 'package:ct_helpline/model/user_data_list.dart';
+import 'package:ct_helpline/view/Login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../../controller/home_controller.dart';
 import '../../controller/login_controller.dart';
 import '../../utilitis/shared_prefs.dart';
 
@@ -10,10 +12,13 @@ import '../../utilitis/shared_prefs.dart';
 
 class Hompage extends StatelessWidget {
  final LoginController loginController = Get.put(LoginController());
+ final HomeController homeController = Get.put(HomeController());
   Hompage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    homeController.getUserData();
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Homepage"),
@@ -28,7 +33,7 @@ class Hompage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Number is: ${UserDataList.token} ",
+                    "Number is: ${homeController.userDataInfo.value.uid} ",
                     style: TextStyle(fontSize: 20.0, color: Colors.redAccent),
                   ),
                   SizedBox(
@@ -49,7 +54,10 @@ class Hompage extends StatelessWidget {
                       onPressed: () async{
                         SharedPrefs prefs=SharedPrefs();
                         await prefs.removeLogin();
+                        await prefs.removeUserData();
+                        Get.off(LoginScreen());
                         print(await prefs.getIsLogin());
+                        print(await prefs.getUserData());
                       },
                       color: Colors.yellow,
                       elevation: 0,

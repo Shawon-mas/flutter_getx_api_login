@@ -31,17 +31,23 @@ class LoginController extends GetxController{
                    if (kDebugMode) {
                      print("Response:${response.body}");
                    }
-                   var data=jsonDecode(response.body.toString());
+                   Map<String,dynamic> data=jsonDecode(response.body);
                    var result=data['data'];
                    if(result!=null){
-                     UserDataList.email=UserDataModel.fromJson(data).data!.email.toString();
+                   /*  UserDataList.email=UserDataModel.fromJson(data).data!.email.toString();
                      UserDataList.number=UserDataModel.fromJson(data).data!.userId.toString();
-                     UserDataList.token=UserDataModel.fromJson(data).accessToken!;
+                     UserDataList.token=UserDataModel.fromJson(data).accessToken!;*/
                     /* Data user=Data.fromJson(result);
                      await SharedPrefs().storeUser(json.encode(user));*/
                      await SharedPrefs().isLogin(true);
-                     print(await SharedPrefs().getIsLogin());
-                    // print(user.);
+
+                     if (kDebugMode) {
+                       print(await SharedPrefs().getIsLogin());
+                     }
+                     if (kDebugMode) {
+                       print("User details: ${result['name']}");
+                     }
+                     await SharedPrefs().storeUserData(json.encode(result));
                      Get.offAll(Hompage());
                      isDataReadingCompleted.value=true;
                      isLoading.value=false;
