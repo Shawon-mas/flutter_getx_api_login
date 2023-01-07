@@ -1,13 +1,15 @@
-import 'package:ct_helpline/HomePage/test.dart';
 import 'package:ct_helpline/model/user_data_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import '../controller/login_controller.dart';
+import '../../controller/login_controller.dart';
+import '../../utilitis/shared_prefs.dart';
+
+
 
 class Hompage extends StatelessWidget {
-  LoginController loginController = Get.find();
+ final LoginController loginController = Get.put(LoginController());
   Hompage({Key? key}) : super(key: key);
 
   @override
@@ -22,8 +24,7 @@ class Hompage extends StatelessWidget {
             icon: Icon(Icons.arrow_back)),
       ),
       body: Center(
-        child: Obx(() => loginController.isDataReadingCompleted.value == true
-            ? Column(
+        child:  Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
@@ -45,21 +46,26 @@ class Hompage extends StatelessWidget {
                         )),
                     child: MaterialButton(
                       height: 50,
-                      onPressed: () {},
+                      onPressed: () async{
+                        SharedPrefs prefs=SharedPrefs();
+                        await prefs.removeLogin();
+                        print(await prefs.getIsLogin());
+                      },
                       color: Colors.yellow,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
                       child: Text(
-                        "Go  to next page",
+                        "Log Out",
                         style: TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 18),
                       ),
                     ),
                   ),
                 ],
-              )
-            : CircularProgressIndicator()),
+
+
+        ),
       ),
     );
   }

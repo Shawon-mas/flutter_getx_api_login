@@ -1,13 +1,15 @@
 import 'dart:convert';
 
 import 'package:ct_helpline/model/user_data_model.dart';
+import 'package:ct_helpline/utilitis/shared_prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import '../HomePage/homepage.dart';
+
 import '../model/user_data_list.dart';
 import '../utilitis/api_services.dart';
+import '../view/HomePage/homepage.dart';
 
 class LoginController extends GetxController{
   final phoneController = TextEditingController();
@@ -25,6 +27,7 @@ class LoginController extends GetxController{
                try{
                  var response=await http.post(Uri.parse(ApiServices.login_api_url),body: body);
                  if(response.statusCode==200){
+
                    if (kDebugMode) {
                      print("Response:${response.body}");
                    }
@@ -34,7 +37,12 @@ class LoginController extends GetxController{
                      UserDataList.email=UserDataModel.fromJson(data).data!.email.toString();
                      UserDataList.number=UserDataModel.fromJson(data).data!.userId.toString();
                      UserDataList.token=UserDataModel.fromJson(data).accessToken!;
-                     Get.to(Hompage());
+                    /* Data user=Data.fromJson(result);
+                     await SharedPrefs().storeUser(json.encode(user));*/
+                     await SharedPrefs().isLogin(true);
+                     print(await SharedPrefs().getIsLogin());
+                    // print(user.);
+                     Get.offAll(Hompage());
                      isDataReadingCompleted.value=true;
                      isLoading.value=false;
                    }else{
