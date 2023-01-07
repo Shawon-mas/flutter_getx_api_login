@@ -53,8 +53,9 @@ class Hompage extends StatelessWidget {
                       height: 50,
                       onPressed: () async{
                         SharedPrefs prefs=SharedPrefs();
-                        await prefs.removeLogin();
-                        await prefs.removeUserData();
+                        prefs.prefsClear() ;
+                        /*await prefs.removeLogin();
+                        await prefs.removeUserData();*/
                         Get.off(LoginScreen());
                         print(await prefs.getIsLogin());
                         print(await prefs.getUserData());

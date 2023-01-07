@@ -23,7 +23,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
   initState() {
     super.initState();
-
     _controller = AnimationController(
         duration: const Duration(milliseconds: 3000),
         vsync: this,

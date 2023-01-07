@@ -40,6 +40,9 @@ class LoginController extends GetxController{
                     /* Data user=Data.fromJson(result);
                      await SharedPrefs().storeUser(json.encode(user));*/
                      await SharedPrefs().isLogin(true);
+                     await SharedPrefs().saveToken(data['access_token']);
+                     print(await SharedPrefs().getToken());
+
 
                      if (kDebugMode) {
                        print(await SharedPrefs().getIsLogin());
